@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getEstimateLines, getIllustrativeValues } from "@/lib/data";
+import { getEstimateLines } from "@/lib/data";
 import { getDictionary, isLang, pick } from "@/lib/i18n";
 import { Section } from "@/components/ui/Section";
 import { ProvenanceTag } from "@/components/data/ProvenanceTag";
@@ -16,7 +16,7 @@ export default async function EstimatePage({ params }: PageProps<"/[lang]/estima
   if (!isLang(lang)) notFound();
   const t = getDictionary(lang);
   const e = t.estimate;
-  const [lines, illustrative] = await Promise.all([getEstimateLines(), getIllustrativeValues()]);
+  const lines = await getEstimateLines();
 
   return (
     <div className="flex flex-col gap-5">
@@ -36,8 +36,7 @@ export default async function EstimatePage({ params }: PageProps<"/[lang]/estima
       >
         <Estimator
           lines={lines.map((l) => ({ id: l.id, item: pick(l.item, lang), unit: pick(l.unit, lang) }))}
-          illustrative={illustrative.values}
-          labels={{ ...e, mockTag: t.provenance.mock }}
+          labels={e}
         />
         <p className="mt-3 text-xs text-slate-600">{e.notInBrief}</p>
       </Section>

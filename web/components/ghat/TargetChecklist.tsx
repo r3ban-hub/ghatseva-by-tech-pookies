@@ -12,7 +12,12 @@ export function TargetChecklist({ standard, lang, t }: { standard: TargetStandar
       id="target"
       title={g.title}
       subtitle={g.subtitle}
-      aside={<ProvenanceTag provenance="prd" label={t.provenance.prd} detail="§7.1" title={t.provenance.prdLong} />}
+      aside={
+        <div className="flex flex-wrap justify-end gap-1">
+          <ProvenanceTag provenance="backend" label={t.provenance.backend} detail="criteria CSV" title={t.provenance.backendLong} />
+          <ProvenanceTag provenance="prd" label={t.provenance.prd} detail="§7.1" title={t.provenance.prdLong} />
+        </div>
+      }
     >
       <div className="flex flex-col gap-3">
         <p className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-900">

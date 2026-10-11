@@ -1,6 +1,6 @@
 # Visarjan Ghat Watch — web UI
 
-Next.js frontend for the Bhopal Municipal Corporation officer who plans Durga visarjan (20 Oct 2026). It follows `visarjan_ghat_watch_prd_v2.md`: **Rank → Flag → Recommend → Plan → Assign → Estimate → Brief**.
+Next.js frontend for the Bhopal Municipal Corporation officer who plans Durga visarjan (20 Oct 2026). It follows the team's PRD v2 (an internal planning document, not published in this repository): **Rank → Flag → Recommend → Plan → Assign → Estimate → Brief**.
 
 > **Shows backend output only.** Every figure, flag, reading, grid cell, action and date comes from the Python backend in the repository root, exported to `lib/data/generated/backend.json`. Readings are historical (2023–2025); there are no 2026 measurements. Report page references are only partly checked against the PDFs (see the root README).
 

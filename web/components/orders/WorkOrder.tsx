@@ -20,7 +20,9 @@ interface Props {
 /** A4 draft work order. Roles and zone stay blank ("Assign: ____"); no costs, names or contacts. */
 export function WorkOrder({ site, actions, groups, meta, standard, printedNames, reasons, lang, t }: Props) {
   const o = t.orders;
-  const where = printedNames.at(-1)?.name ?? site.csvSiteName;
+  // Every name the reports print for this ghat; never pick one (identity may be uncertain).
+  const names = printedNames.length > 0 ? printedNames.map((p) => p.name) : [site.csvSiteName];
+  const identityUncertain = site.flags.includes("SITE_IDENTITY");
   const sorted = [...actions].sort((a, b) => a.start.localeCompare(b.start));
   const groupInfo = new Map(groups.map((g) => [g.group, g]));
 
@@ -86,12 +88,21 @@ export function WorkOrder({ site, actions, groups, meta, standard, printedNames,
                 <td className="py-1.5 pr-2">
                   <span className="font-medium text-slate-900">{t.ghat.actions.groups[a.taskGroup]}</span>
                   <p className="text-slate-800">{pick(a.text, lang)}</p>
-                  <p className="text-[11px] text-slate-500 italic">{t.common.recommendation}</p>
+                  {!a.verified && <p className="text-[11px] text-slate-500 italic">{t.common.recommendation}</p>}
                 </td>
                 <td className="py-1.5 pr-2 font-medium whitespace-nowrap">{pick(a.dates, lang)}</td>
                 <td className="py-1.5 pr-2">
-                  <span className="font-medium">{t.common.assignBlank}</span>
-                  <span className="block text-[11px] text-slate-500">{pick(groupInfo.get(a.taskGroup)?.roleExample ?? { en: "", hi: "" }, lang)}</span>
+                  {a.responsible ? (
+                    <span className="font-medium">
+                      {a.responsible}
+                      {a.responsibleIsAssumption && <span className="block text-[11px] font-normal text-slate-500">{t.common.assumedConfirm}</span>}
+                    </span>
+                  ) : (
+                    <>
+                      <span className="font-medium">{t.common.assignBlank}</span>
+                      <span className="block text-[11px] text-slate-500">{pick(groupInfo.get(a.taskGroup)?.roleExample ?? { en: "", hi: "" }, lang)}</span>
+                    </>
+                  )}
                 </td>
                 <td className="py-1.5 pr-2 text-center">
                   <Square aria-label={o.col.done} className="inline h-4 w-4 text-slate-500" />
@@ -102,8 +113,9 @@ export function WorkOrder({ site, actions, groups, meta, standard, printedNames,
           </tbody>
         </table>
         <p className="mt-1.5 text-xs text-slate-700">
-          <span className="text-slate-500">{o.col.where}:</span> “{where}” · {o.locationNote}
+          <span className="text-slate-500">{o.col.where}:</span> {names.map((n) => `“${n}”`).join(" · ")} · {o.locationNote}
         </p>
+        {identityUncertain && <p className="mt-1 text-xs font-medium text-slate-800">{o.identityNote}</p>}
       </section>
 
       <section className="mt-3">

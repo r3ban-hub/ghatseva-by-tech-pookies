@@ -4,7 +4,11 @@ import { FLAG_ORDER } from "@/lib/flags";
 
 /** Plain-words sentences for a site's supplied flags, filled with PRD v2 §6.5 figures. */
 export function siteReasons(site: SiteRanking, t: Dictionary): string[] {
-  return FLAG_ORDER.filter((f) => site.flags.includes(f)).map((flag) => {
+  // A ghat can be Tier 2 on DO without carrying a DO flag (e.g. 8 of 18 below 5, lowest 4):
+  // lead with that DO result so the tier is explained.
+  const hasDoFlag = site.flags.some((f) => f === "DO_SEVERE" || f === "DO_OFTEN_LOW");
+  const lead = !hasDoFlag && site.doBelow5.n > 0 ? [fill(t.flagSentence.DO_OFTEN_LOW, { n: site.doBelow5.n, N: site.doBelow5.N })] : [];
+  return [...lead, ...FLAG_ORDER.filter((f) => site.flags.includes(f)).map((flag) => {
     switch (flag) {
       case "DO_SEVERE":
         return fill(t.flagSentence.DO_SEVERE, { n: site.doBelow4, N: site.doBelow5.N, min: site.doMin });
@@ -21,5 +25,5 @@ export function siteReasons(site: SiteRanking, t: Dictionary): string[] {
       case "SITE_IDENTITY":
         return t.ghat.flagSentence.SITE_IDENTITY;
     }
-  });
+  })];
 }

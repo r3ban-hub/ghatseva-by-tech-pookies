@@ -215,7 +215,7 @@ def test_disclosures(briefs):
     assert "✓ = cited reading matched the PDF page in a partial manual check." in en
     assert "not counted as passing: #1 (15), #2 (15), #3 (1), #6 (4)" in en
     assert "टोटल कोलीफॉर्म की कोई रीडिंग नहीं" in hi and "2026 की कोई रीडिंग नहीं" in hi
-    assert "दो अलग जगहें" in hi and "बाकी पृष्ठों की जाँच अभी नहीं हुई है" in hi
+    assert "दो अलग जगहें" in hi and "बाकी पृष्ठ संदर्भ अभी जाँचे नहीं गए हैं" in hi
     assert "not an official MPPCB assessment" in en and "MPPCB का आधिकारिक आकलन नहीं" in hi
 
 

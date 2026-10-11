@@ -4,6 +4,7 @@ Ranks Bhopal's seven idol-immersion ghats by water-quality risk ahead of **Durga
 
 - **Track:** Claude Impact Lab × Cerebras, Bhopal — Track 2: Visarjan Ghat Watch
 - **User:** the Bhopal Municipal Corporation (BMC) officer who plans Durga visarjan at the ghats
+- **Spec:** the team's PRD v2 (an internal planning document, not published here); the UI cites its sections for rules and plan windows
 - **Team name:** Tech Pookies
 
 > **Status:** a tested Python backend (`ghatwatch/`) and a static Next.js web UI (`web/`) that shows only the backend's outputs. Nothing is live: all readings are historical (2023–2025). The cost estimator is a calculator with no rates supplied; it shows no cost figures unless an officer types in cited rates.
@@ -53,7 +54,7 @@ python -m ghatwatch.brief en                      # officer brief (en | hi)
 | 6 | Prempura ghat | 2 | yes | 3/18 | 1 | 9/15 | 2/17 | DO_SEVERE, BOD_OFTEN_HIGH, PH_OUT, DATA_GAP |
 | 7 | Hathaikheda dam / kund | 3 | no | 0/18 | 0 | 16/18 | 3/18 | BOD_OFTEN_HIGH, PH_OUT |
 
-Counts are readings outside the limit / usable readings. Hathaikheda is ranked last, but that is **not** a statement that it is safe: BOD reached 22 mg/l and pH reached 9.2.
+Counts are readings outside the limit / usable readings. Hathaikheda is ranked last, but that is **not** a clearance: BOD was above 3 mg/l in 16 of 18 readings (up to 22 mg/l) and pH reached 9.2.
 
 ## Data sources
 
@@ -75,7 +76,7 @@ Original reports, as listed in the data dictionary:
 - [MPPCB Ganesh and Durga Visarjan Report 2025](https://www.mppcb.mp.gov.in/proc/mon/Ganesh_and_Durga_visarjan_report-2025.pdf)
 - [CPCB water quality criteria](https://cpcb.gov.in/water-quality-criteria/)
 
-The repo makes no network calls. Nothing is scraped or downloaded at run time.
+The Python backend and the built site make no network calls, and nothing is scraped. Installing and building the UI downloads npm packages and two Google Fonts (Inter, Noto Sans Devanagari), which the built site then serves itself.
 
 ## Method
 
@@ -177,4 +178,4 @@ No personal data is stored. `config/ghat_assignments.csv` holds role titles only
 
 ## License
 
-MIT; see [LICENSE](LICENSE).
+Code: MIT; see [LICENSE](LICENSE). The files in `data/` are unchanged copies from the Bhopal Impact Lab 2026 Track 2 participant pack (https://github.com/Laaaaksh/bhopal-impact-lab-2026, `tracks/02-visarjan-ghat-watch/data`), derived from MPPCB and CPCB publications; they are not covered by this licence.

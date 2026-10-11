@@ -1,5 +1,5 @@
 import { CalendarDays } from "lucide-react";
-import type { Lang, RecommendedAction } from "@/lib/data/types";
+import type { FlagCode, Lang, RecommendedAction } from "@/lib/data/types";
 import { pick, type Dictionary } from "@/lib/i18n";
 import { FLAG_SEVERITY } from "@/lib/flags";
 import { Section } from "@/components/ui/Section";
@@ -26,12 +26,9 @@ export function ActionList({ actions, lang, t }: { actions: RecommendedAction[];
               {action.trigger === "ALL" ? (
                 <span className="text-slate-700">{a.allGhats}</span>
               ) : (
-                <FlagChip
-                  severity={FLAG_SEVERITY[action.trigger]}
-                  label={t.flag[action.trigger].short}
-                  title={t.flag[action.trigger].long}
-                  identity={action.trigger === "SITE_IDENTITY"}
-                />
+                ((action.triggers ?? [action.trigger]).filter((f): f is FlagCode => f in FLAG_SEVERITY)).map((f) => (
+                  <FlagChip key={f} severity={FLAG_SEVERITY[f]} label={t.flag[f].short} title={t.flag[f].long} identity={f === "SITE_IDENTITY"} />
+                ))
               )}
             </div>
             <p className="mt-1 text-sm text-slate-800">{pick(action.text, lang)}</p>

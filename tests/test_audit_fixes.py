@@ -1,4 +1,4 @@
-"""Regression tests for the independent audit findings (D1-D6, R3-R8) and the PDF spot-check record."""
+"""Regression tests for data-handling, privacy-check and export fixes, and the PDF spot-check record."""
 
 import math
 from dataclasses import replace
@@ -203,7 +203,7 @@ def test_brief_wording_follows_csv_limit(tmp_path):
 
 
 def test_brief_cannot_be_built_on_reversed_bod(tmp_path):
-    """A reversed BOD direction no longer reaches the brief: ranking refuses it first (Prompt 10 guard)."""
+    """A reversed BOD direction no longer reaches the brief: ranking refuses it first (criteria-direction guard)."""
     table = _criteria_with(tmp_path, "B", "BOD (5 days 20C)", "limit_type", "min")
     with pytest.raises(cr.CriteriaDirectionError, match="Class B BOD must be a 'max' criterion"):
         rk.rank_ghats(load.load_all(), table)

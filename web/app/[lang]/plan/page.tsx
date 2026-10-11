@@ -39,7 +39,11 @@ export default async function PlanPage({ params }: PageProps<"/[lang]/plan">) {
         window: action.window,
         startDay: day(action.start),
         endDay: day(action.end),
-        roleExample: info ? pick(info.roleExample, lang) : "",
+        roleExample: action.responsible
+          ? `${action.responsible}${action.responsibleIsAssumption ? ` ${t.common.assumedConfirm}` : ""}`
+          : info
+            ? pick(info.roleExample, lang)
+            : "",
         outcome: info ? pick(info.outcome, lang) : "",
       });
     }

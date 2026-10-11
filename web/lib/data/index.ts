@@ -19,6 +19,5 @@ export const getPlanWindows = () => source.getPlanWindows();
 export const getTaskGroups = () => source.getTaskGroups();
 export const getWorkOrderMeta = () => source.getWorkOrderMeta();
 export const getEstimateLines = () => source.getEstimateLines();
-export const getIllustrativeValues = () => source.getIllustrativeValues();
 
 export type * from "./types";

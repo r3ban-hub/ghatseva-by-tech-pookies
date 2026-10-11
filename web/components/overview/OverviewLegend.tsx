@@ -13,8 +13,6 @@ export function OverviewLegend({ t }: { t: Dictionary }) {
   const longText: Record<Provenance, string> = {
     backend: t.provenance.backendLong,
     prd: t.provenance.prdLong,
-    track_csv: t.provenance.track_csvLong,
-    mock: t.provenance.mockLong,
     blank: t.provenance.blankLong,
   };
 

@@ -109,13 +109,13 @@ export function RankingTable({ rows, labels }: { rows: RankingRowView[]; labels:
       <th
         scope="col"
         aria-sort={active ? (sort.dir === "asc" ? "ascending" : "descending") : "none"}
-        className={`px-2 py-2 font-medium whitespace-nowrap ${align === "right" ? "text-right" : "text-left"}`}
+        className={`px-2 py-2 align-bottom font-medium leading-tight ${align === "right" ? "min-w-[5rem] text-right" : "text-left"}`}
       >
         <button
           type="button"
           onClick={() => toggle(key)}
           title={labels.sortBy.replace("{col}", text)}
-          className={`inline-flex items-center gap-1 rounded px-1 py-0.5 transition-colors hover:bg-slate-200/70 hover:text-slate-900 ${
+          className={`inline-flex items-center gap-1 rounded px-1 py-0.5 text-balance transition-colors hover:bg-slate-200/70 hover:text-slate-900 ${align === "right" ? "text-right" : "text-left"} ${
             active ? "text-slate-900" : ""
           }`}
         >
@@ -166,10 +166,10 @@ export function RankingTable({ rows, labels }: { rows: RankingRowView[]; labels:
               {header("doMin", `${labels.col.doMin} (${labels.unitMgL})`, "right")}
               {header("bodAbove3", labels.col.bodAbove3, "right")}
               {header("phOut", labels.col.phOut, "right")}
-              <th scope="col" className="px-2 py-2 text-left font-medium whitespace-nowrap">
+              <th scope="col" className="px-2 py-2 text-left align-bottom font-medium leading-tight">
                 {labels.col.coverage}
               </th>
-              <th scope="col" className="px-2 py-2 text-left font-medium whitespace-nowrap">
+              <th scope="col" className="min-w-[10.5rem] px-2 py-2 text-left align-bottom font-medium leading-tight">
                 {labels.col.flags}
               </th>
               <th scope="col" className="w-8 px-2 py-2">
@@ -226,8 +226,8 @@ export function RankingTable({ rows, labels }: { rows: RankingRowView[]; labels:
                 <td className="px-2 py-2.5">
                   <CoverageMeter items={r.coverage} />
                 </td>
-                <td className="px-2 py-2.5">
-                  <div className="flex max-w-[15rem] flex-wrap gap-1">
+                <td className="min-w-[10.5rem] px-2 py-2.5">
+                  <div className="flex flex-col items-start gap-1">
                     {r.flags.map((f) => (
                       <FlagChip key={f.code} severity={f.severity} label={f.label} title={f.title} identity={f.code === "SITE_IDENTITY"} />
                     ))}

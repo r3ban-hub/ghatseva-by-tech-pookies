@@ -44,7 +44,9 @@ def test_headlines(export):
         {"n": 42, "N": 116}, {"n": 17, "N": 116}, {"n": 100, "N": 112}, {"n": 6, "N": 115})
     assert (h["durgaDoBelow5"], h["durgaBodAbove3"]) == ({"n": 25, "N": 57}, {"n": 50, "N": 53})
     assert h["highRisk"] == {"n": 5, "N": 7} and h["preBodAbove3"] == {"n": 32, "N": 37}
-    assert h["doZero"]["count"] == 4 and h["doZero"]["site"] == "Bairagarh (Sant Hirdaram) kund"
+    assert h["doZero"]["count"] == 4 and h["doZero"]["sites"] == ["Bairagarh (Sant Hirdaram) kund"]
+    assert [(r["year"], r["page"], r["verified"]) for r in h["doZero"]["refs"]] == [
+        (2023, 26, True), (2023, 60, True), (2025, 28, True)]
 
 
 def test_sites_equal_ranking(export, backend):

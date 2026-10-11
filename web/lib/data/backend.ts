@@ -66,6 +66,7 @@ interface ExportAction {
   order: number; site: string; id: string; trigger: FlagCode | "ALL"; triggers: string[]; taskGroup: TaskGroup;
   en: string; hi: string; hiReviewed: boolean; window: string; start: string; end: string; datesEn: string; datesHi: string;
   source: string; verified: boolean; warning: string | null;
+  responsible: string; responsibleAssigned: boolean; responsibleIsAssumption: boolean; reportTo: string | null;
 }
 interface ExportCriterion {
   parameter: string; cpcbClass: "B" | "D"; limitType: "min" | "max" | "range"; limit: string; unit: string | null;
@@ -80,7 +81,7 @@ interface BackendExport {
     warningEn: string; warningHi: string;
   };
   headlines: {
-    doBelow5: ExportFrac; doBelow4: ExportFrac; doZero: { count: number; site: string | null; refs: ExportRef[] };
+    doBelow5: ExportFrac; doBelow4: ExportFrac; doZero: { count: number; sites: string[]; refs: ExportRef[] };
     bodAbove3: ExportFrac; phOut: ExportFrac; durgaDoBelow5: ExportFrac; durgaBodAbove3: ExportFrac;
     highRisk: ExportFrac; preBodAbove3: ExportFrac;
   };
@@ -92,6 +93,48 @@ interface BackendExport {
 }
 
 const data = raw as unknown as BackendExport;
+validateExport(data);
+
+/** Checks the fields the UI relies on, so a renamed or mistyped field fails the build instead of rendering wrong. */
+function validateExport(d: BackendExport): void {
+  const fail = (what: string): never => {
+    throw new Error(`backend.json does not match the UI contract (${what}). Regenerate it: python -m ghatwatch.export_web`);
+  };
+  const ISO = /^\d{4}-\d{2}-\d{2}$/;
+  const STATES = new Set(["numeric", "bdl", "nd", "not_sampled", "no_table", "unknown_flag", "invalid_value"]);
+  const GROUPS = new Set(["aeration", "cleaning", "barricading", "sampling", "identity"]);
+  const FLAGS = new Set(["DO_SEVERE", "DO_ZERO", "DO_OFTEN_LOW", "BOD_OFTEN_HIGH", "PH_OUT", "DATA_GAP", "SITE_IDENTITY"]);
+  const isFrac = (f: unknown) => typeof f === "object" && f !== null && typeof (f as ExportFrac).n === "number" && typeof (f as ExportFrac).N === "number";
+  for (const key of ["generator", "meta", "headlines", "sites", "cells", "actions", "targets", "planWindows"]) {
+    if (!(key in d)) fail(`missing "${key}"`);
+  }
+  d.sites.forEach((s, i) => {
+    if (typeof s.csvSiteName !== "string") fail(`sites[${i}].csvSiteName`);
+    if (![1, 2, 3, 4].includes(s.tier)) fail(`sites[${i}].tier = ${String(s.tier)}`);
+    for (const k of ["doBelow5", "bodAbove3", "phOutOfRange"] as const) if (!isFrac(s[k])) fail(`sites[${i}].${k}`);
+    for (const k of ["rank", "doBelow4", "doZeroCount", "expectedPerParameter"] as const) if (typeof s[k] !== "number") fail(`sites[${i}].${k}`);
+    if (typeof s.doMin !== "string" || typeof s.highRisk !== "boolean") fail(`sites[${i}].doMin / highRisk`);
+    if (!Array.isArray(s.flags) || s.flags.some((f) => !FLAGS.has(f))) fail(`sites[${i}].flags`);
+    if (!Array.isArray(s.notes) || s.notes.some((n) => !FLAGS.has(n.flag) || typeof n.en !== "string" || typeof n.hi !== "string")) fail(`sites[${i}].notes`);
+  });
+  d.cells.forEach((c, i) => {
+    if (!STATES.has(c.state)) fail(`cells[${i}].state = ${String(c.state)}`);
+    if (c.state === "no_table" ? !(c.missingReason === "season_table_absent" || c.missingReason === "parameter_absent") : !c.reading) {
+      fail(`cells[${i}] reading / missingReason`);
+    }
+  });
+  d.actions.forEach((a, i) => {
+    if (!(a.trigger === "ALL" || FLAGS.has(a.trigger))) fail(`actions[${i}].trigger = ${String(a.trigger)}`);
+    if (!GROUPS.has(a.taskGroup)) fail(`actions[${i}].taskGroup = ${String(a.taskGroup)}`);
+    if (!ISO.test(a.start) || !ISO.test(a.end)) fail(`actions[${i}] dates`);
+  });
+  if (!ISO.test(d.meta.visarjanDate) || !ISO.test(d.meta.d7Date)) fail("meta dates");
+  if (!d.meta.interimNote?.en || !d.meta.coverage || !Array.isArray(d.meta.criteria)) fail("meta.interimNote / coverage / criteria");
+  for (const k of ["doBelow5", "doBelow4", "bodAbove3", "phOut", "durgaDoBelow5", "durgaBodAbove3", "highRisk", "preBodAbove3"] as const) {
+    if (!isFrac(d.headlines[k])) fail(`headlines.${k}`);
+  }
+  if (!Array.isArray(d.headlines.doZero?.sites) || !Array.isArray(d.headlines.doZero?.refs)) fail("headlines.doZero");
+}
 
 // ---------------------------------------------------------------- helpers
 
@@ -236,6 +279,8 @@ function actions(siteId: string): RecommendedAction[] {
       prdRef: "action_rules.csv",
       triggers: a.triggers,
       hiReviewed: a.hiReviewed,
+      responsible: a.responsibleAssigned ? a.responsible : null,
+      responsibleIsAssumption: a.responsibleIsAssumption,
     }));
 }
 
@@ -262,8 +307,10 @@ const HEADLINES: HeadlineFinding[] = [
     id: "do-zero",
     label: { en: `Dissolved oxygen read 0${unitOf(DO_B)}`, hi: `घुलित ऑक्सीजन 0${unitOf(DO_B)} दर्ज` },
     value: { kind: "count", value: h.doZero.count },
-    detail: h.doZero.site
-      ? { en: `readings, all at ${h.doZero.site}`, hi: `रीडिंग, सभी ${siteLabel(h.doZero.site).hi} पर` }
+    detail: h.doZero.sites.length === 1
+      ? { en: `readings, all at ${h.doZero.sites[0]}`, hi: `रीडिंग, सभी ${siteLabel(h.doZero.sites[0]).hi} पर` }
+      : h.doZero.sites.length > 1
+      ? { en: `readings at ${h.doZero.sites.join(", ")}`, hi: `रीडिंग: ${h.doZero.sites.map((s) => siteLabel(s).hi).join(", ")}` }
       : { en: "readings", hi: "रीडिंग" },
     refs: h.doZero.refs.map(sourceRef),
     provenance: "backend",
@@ -315,8 +362,8 @@ const HEADLINES: HeadlineFinding[] = [
     label: { en: `BOD already above ${BOD_B.limit} before immersion`, hi: `विसर्जन से पहले ही BOD ${BOD_B.limit} से अधिक` },
     value: frac(h.preBodAbove3),
     detail: {
-      en: "pre-immersion readings. The water was already above the limit before immersion, so these readings cannot show what immersion itself changed.",
-      hi: "विसर्जन-पूर्व रीडिंग। पानी विसर्जन से पहले ही सीमा से ऊपर था, इसलिए ये रीडिंग यह नहीं दिखा सकतीं कि विसर्जन से स्वयं क्या बदला।",
+      en: "pre-immersion readings. BOD was already above the limit in most readings taken before immersion, so these readings cannot show what immersion itself changed.",
+      hi: "विसर्जन-पूर्व रीडिंग। विसर्जन से पहले ली गई अधिकांश रीडिंग में BOD पहले ही सीमा से ऊपर था, इसलिए ये रीडिंग यह नहीं दिखा सकतीं कि विसर्जन से स्वयं क्या बदला।",
     },
     emphasis: "caveat",
     provenance: "backend",
@@ -419,6 +466,4 @@ export const backendSource: DataSource = {
   async getTaskGroups() { return TASK_GROUPS; },
   async getWorkOrderMeta() { return WORK_ORDER_META; },
   async getEstimateLines() { return ESTIMATE_LINES; },
-  // No illustrative cost values: the PRD forbids invented figures (§8.1).
-  async getIllustrativeValues() { return { provenance: "mock", values: {} }; },
 };

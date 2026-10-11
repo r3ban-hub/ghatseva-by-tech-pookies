@@ -37130,7 +37130,9 @@
      "year": 2025
     }
    ],
-   "site": "Bairagarh (Sant Hirdaram) kund"
+   "sites": [
+    "Bairagarh (Sant Hirdaram) kund"
+   ]
   },
   "durgaBodAbove3": {
    "N": 53,
@@ -37425,7 +37427,7 @@
     {
      "en": "No reading for Dissolved oxygen, BOD, pH in 2025 Ganesh (pre, after); Dissolved oxygen, BOD, pH in 2025 Durga (pre, during, after). Missing data is not counted as passing.",
      "flag": "DATA_GAP",
-     "hi": "15 अपेक्षित DO / BOD / pH रीडिंग उपलब्ध नहीं: 2025 दुर्गा (विसर्जन से पहले, विसर्जन के दौरान, एक सप्ताह बाद); 2025 गणेश (विसर्जन से पहले, एक सप्ताह बाद)। कमी को पास नहीं माना गया।",
+     "hi": "इन रीडिंग का रिकॉर्ड नहीं: DO, BOD, pH: 2025 गणेश (विसर्जन से पहले, एक सप्ताह बाद); DO, BOD, pH: 2025 दुर्गा (विसर्जन से पहले, विसर्जन के दौरान, एक सप्ताह बाद)। कमी को पास नहीं माना गया।",
      "refs": [
       {
        "page": 28,
@@ -37562,7 +37564,7 @@
     {
      "en": "No reading for Dissolved oxygen, BOD, pH in 2025 Ganesh (pre, after); Dissolved oxygen, BOD, pH in 2025 Durga (pre, during, after). Missing data is not counted as passing.",
      "flag": "DATA_GAP",
-     "hi": "15 अपेक्षित DO / BOD / pH रीडिंग उपलब्ध नहीं: 2025 दुर्गा (विसर्जन से पहले, विसर्जन के दौरान, एक सप्ताह बाद); 2025 गणेश (विसर्जन से पहले, एक सप्ताह बाद)। कमी को पास नहीं माना गया।",
+     "hi": "इन रीडिंग का रिकॉर्ड नहीं: DO, BOD, pH: 2025 गणेश (विसर्जन से पहले, एक सप्ताह बाद); DO, BOD, pH: 2025 दुर्गा (विसर्जन से पहले, विसर्जन के दौरान, एक सप्ताह बाद)। कमी को पास नहीं माना गया।",
      "refs": [
       {
        "page": 29,
@@ -37661,7 +37663,7 @@
     {
      "en": "No reading for BOD in 2023 Durga (during). Missing data is not counted as passing.",
      "flag": "DATA_GAP",
-     "hi": "1 अपेक्षित DO / BOD / pH रीडिंग उपलब्ध नहीं: 2023 दुर्गा (विसर्जन के दौरान)। कमी को पास नहीं माना गया।",
+     "hi": "इन रीडिंग का रिकॉर्ड नहीं: BOD: 2023 दुर्गा (विसर्जन के दौरान)। कमी को पास नहीं माना गया।",
      "refs": [
       {
        "page": 59,
@@ -37957,7 +37959,7 @@
     {
      "en": "No reading for BOD in 2023 Durga (pre, after); BOD, pH in 2023 Durga (during). Missing data is not counted as passing.",
      "flag": "DATA_GAP",
-     "hi": "4 अपेक्षित DO / BOD / pH रीडिंग उपलब्ध नहीं: 2023 दुर्गा (विसर्जन से पहले, विसर्जन के दौरान, एक सप्ताह बाद)। कमी को पास नहीं माना गया।",
+     "hi": "इन रीडिंग का रिकॉर्ड नहीं: BOD: 2023 दुर्गा (विसर्जन से पहले, एक सप्ताह बाद); BOD, pH: 2023 दुर्गा (विसर्जन के दौरान)। कमी को पास नहीं माना गया।",
      "refs": [
       {
        "page": 60,

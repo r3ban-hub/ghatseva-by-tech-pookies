@@ -33,7 +33,7 @@ export function CriticalFlags({ sites, lang, t }: { sites: SiteRanking[]; lang: 
                   <> {fill(t.flagSentence.DO_OFTEN_LOW, { n: s.doBelow5.n, N: s.doBelow5.N })}</>
                 )}
               </p>
-              <SiteNoteList notes={notes} lang={lang} t={t} />
+              <SiteNoteList notes={notes} lang={lang} t={t} refsOnly={["DO_SEVERE"]} />
             </li>
           );
         })}

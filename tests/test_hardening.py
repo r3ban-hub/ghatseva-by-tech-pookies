@@ -1,4 +1,4 @@
-"""Prompt 10 hardening: criteria-direction guard and per-reading page-verification status."""
+"""Criteria-direction guard and per-reading page-verification status."""
 
 import pandas as pd
 import pytest

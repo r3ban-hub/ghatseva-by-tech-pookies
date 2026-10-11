@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import type { GridCell } from "@/lib/data/types";
 import { getRanking, getRecommendedActions, getSite, getSiteEvidence, getTargetStandard } from "@/lib/data";
 import { fill, getDictionary, isLang, pick, type Dictionary } from "@/lib/i18n";
-import { countStates, KEY_PARAMETERS } from "@/lib/evidence-view";
+import { countStates, isGap, isUsable, KEY_PARAMETERS } from "@/lib/evidence-view";
 import { criterionText, paramName, refStatus, refText, seasonLabel } from "@/lib/format";
 import { Section } from "@/components/ui/Section";
 import { ProvenanceTag } from "@/components/data/ProvenanceTag";
@@ -31,8 +31,6 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/ghats/[sit
   if (!isLang(lang) || !site) return {};
   return { title: pick(site.name, lang) };
 }
-
-const MISSING = new Set(["not_sampled", "no_table", "unknown_flag", "invalid_value"]);
 
 /** Display domain for a plot: covers the readings and every criterion line drawn on it. */
 function domainFor(parameter: string, values: number[]): [number, number] {
@@ -64,7 +62,7 @@ function plotData(cells: GridCell[], parameter: string, seasonIndex: Map<string,
   const unit = own.find((c) => c.reading?.unitAssumed)?.reading?.unitAssumed ?? "";
 
   const points: DotPoint[] = own
-    .filter((c) => c.state === "numeric" && c.reading && c.reading.value !== null)
+    .filter(isUsable)
     .map((c) => ({
       slot: slotOf(c),
       value: c.reading!.value as number,
@@ -78,7 +76,7 @@ function plotData(cells: GridCell[], parameter: string, seasonIndex: Map<string,
     }));
 
   const missing: MissingMark[] = own
-    .filter((c) => MISSING.has(c.state))
+    .filter(isGap)
     .map((c) => ({
       slot: slotOf(c),
       short: t.valueStateShort[c.state],

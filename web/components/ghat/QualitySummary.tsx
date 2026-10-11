@@ -18,7 +18,7 @@ interface Row {
   value: ReactNode;
 }
 
-/** DO / BOD / pH cards. Counts come from PRD v2 §6.5; the transcription breakdown shows coverage. */
+/** DO / BOD / pH cards. Counts come from the backend ranking; the grid breakdown shows coverage. */
 export function QualitySummary({ site, counts, t }: Props) {
   const s = t.ghat.summary;
   const frac = (f: Fraction) => (

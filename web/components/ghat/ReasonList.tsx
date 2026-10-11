@@ -3,6 +3,7 @@ import { ChevronRight } from "lucide-react";
 import type { FlagCode, GridCell, Lang, PrintedName, SiteRanking } from "@/lib/data/types";
 import { fill, type Dictionary } from "@/lib/i18n";
 import { FLAG_ORDER, FLAG_SEVERITY } from "@/lib/flags";
+import { isGap } from "@/lib/evidence-view";
 import { paramName, seasonLabel } from "@/lib/format";
 import { Section } from "@/components/ui/Section";
 import { FlagChip } from "@/components/data/FlagChip";
@@ -19,7 +20,6 @@ interface Props {
 }
 
 const DO_FLAGS: FlagCode[] = ["DO_SEVERE", "DO_ZERO", "DO_OFTEN_LOW"];
-const MISSING_STATES = new Set(["not_sampled", "no_table", "unknown_flag", "invalid_value"]);
 const KEY = new Set(["Dissolved oxygen", "BOD", "pH"]);
 
 /** One entry per supplied flag: PRD sentence with denominators, notes with pages, expandable readings. */
@@ -62,7 +62,7 @@ export function ReasonList({ site, cells, printedNames, lang, t }: Props) {
       return <Reveal summary={fill(r.showReadings, { param: "pH", n: c.length })}><ReadingMiniTable cells={c} t={t} /></Reveal>;
     }
     if (flag === "DATA_GAP") {
-      const c = cells.filter((x) => KEY.has(x.parameter) && MISSING_STATES.has(x.state));
+      const c = cells.filter((x) => KEY.has(x.parameter) && isGap(x));
       return <Reveal summary={fill(r.showMissing, { n: c.length })}><ReadingMiniTable cells={c} t={t} showParameter /></Reveal>;
     }
     if (flag === "SITE_IDENTITY") {
@@ -92,7 +92,13 @@ export function ReasonList({ site, cells, printedNames, lang, t }: Props) {
               <ProvenanceTag provenance="backend" label={t.provenance.backend} detail="ranking.py" title={t.provenance.backendLong} />
             </div>
             <p className="mt-1.5 text-sm text-slate-800">{sentence(flag)}</p>
-            <SiteNoteList notes={site.notes.filter((n) => n.flag === flag)} lang={lang} t={t} />
+            <SiteNoteList
+              notes={site.notes.filter((n) => n.flag === flag)}
+              lang={lang}
+              t={t}
+              refsOnly={["DO_SEVERE", "DO_OFTEN_LOW", "BOD_OFTEN_HIGH", "PH_OUT", "SITE_IDENTITY"]}
+              provenanceTag={false}
+            />
             {disclosure(flag)}
           </li>
         ))}

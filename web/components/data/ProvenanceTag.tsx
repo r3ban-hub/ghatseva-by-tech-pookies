@@ -3,8 +3,6 @@ import type { Provenance } from "@/lib/data/types";
 const STYLES: Record<Provenance, string> = {
   backend: "border-navy bg-white text-navy font-medium",
   prd: "border-navy-line bg-navy-soft text-navy",
-  track_csv: "border-slate-300 bg-white text-slate-700",
-  mock: "hatch border-dashed border-slate-500 bg-white text-slate-800 font-semibold",
   blank: "border-dashed border-slate-300 bg-white text-slate-500",
 };
 

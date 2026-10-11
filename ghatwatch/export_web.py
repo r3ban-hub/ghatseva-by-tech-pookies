@@ -99,13 +99,25 @@ def _note_hi(f: rk.Flag, table: cr.CriteriaTable) -> str:
     if f.code == "PH_OUT":
         return f"pH {c['N']} में से {c['n']} रीडिंग में {ph_b.limit_as_printed.replace('-', '–')} से बाहर रहा ({c['values']})।"
     if f.code == "DATA_GAP":
-        seasons: dict[tuple[int, str], list[str]] = {}
-        for e in f.evidence:
-            seasons.setdefault((e.year, e.festival), [])
-            if PHASE_HI[e.phase] not in seasons[(e.year, e.festival)]:
-                seasons[(e.year, e.festival)].append(PHASE_HI[e.phase])
-        where = "; ".join(f"{y} {FESTIVAL_HI[fe]} ({', '.join(ph)})" for (y, fe), ph in sorted(seasons.items()))
-        return f"{c['cells']} अपेक्षित DO / BOD / pH रीडिंग उपलब्ध नहीं: {where}। कमी को पास नहीं माना गया।"
+        # Same grouping as ranking._gap_text: per season, phases that miss the same parameters.
+        parts = []
+        festival_order = {fe: i for i, fe in enumerate(load.FESTIVALS)}
+        seasons = sorted({(e.year, e.festival) for e in f.evidence}, key=lambda s: (s[0], festival_order[s[1]]))
+        for year, fest in seasons:
+            by_phase = {}
+            for ph in load.PHASES:
+                params = tuple(p for p in rk.RANKED_PARAMETERS
+                               if any(e.year == year and e.festival == fest and e.phase == ph and e.parameter == p
+                                      for e in f.evidence))
+                if params:
+                    by_phase[ph] = params
+            merged: dict[tuple, list[str]] = {}
+            for ph, params in by_phase.items():
+                merged.setdefault(params, []).append(PHASE_HI[ph])
+            for params, phases in merged.items():
+                names = ", ".join("DO" if p == rk.DO else p for p in params)
+                parts.append(f"{names}: {year} {FESTIVAL_HI[fest]} ({', '.join(phases)})")
+        return f"इन रीडिंग का रिकॉर्ड नहीं: {'; '.join(parts)}। कमी को पास नहीं माना गया।"
     if f.code == "SITE_IDENTITY":
         return "रिपोर्ट की तालिकाओं में इस नाम से दो अलग जगहें हो सकती हैं।"
     raise ValueError(f"no Hindi wording for flag {f.code}")
@@ -151,14 +163,13 @@ def build_export(generated_on: date | str | None = None) -> dict:
 
     durga = usable[usable["festival"] == "Durga"]
     pre = usable[usable["phase"] == "pre"]
-    zeros = [g for g in ranking.ghats for f in g.flags if f.code == "DO_ZERO"]
-    zero_flag = next((f for g in ranking.ghats for f in g.flags if f.code == "DO_ZERO"), None)
-    zero_site = zeros[0].site if len(zeros) == 1 else None
+    zero_flags = [(g.site, f) for g in ranking.ghats for f in g.flags if f.code == "DO_ZERO"]
 
     headlines = {
         "doBelow5": fails(rk.DO), "doBelow4": fails(rk.DO, column="class_d_result"),
-        "doZero": {"count": sum(g.metrics.do_zero for g in ranking.ghats), "site": zero_site,
-                   "refs": _refs(zero_flag.evidence, zero_site, checked) if zero_flag and zero_site else []},
+        "doZero": {"count": sum(g.metrics.do_zero for g in ranking.ghats),
+                   "sites": [site for site, _ in zero_flags],
+                   "refs": [r for site, f in zero_flags for r in _refs(f.evidence, site, checked)]},
         "bodAbove3": fails(rk.BOD), "phOut": fails(rk.PH),
         "durgaDoBelow5": fails(rk.DO, durga), "durgaBodAbove3": fails(rk.BOD, durga),
         "highRisk": _frac(sum(g.high_risk for g in ranking.ghats), len(ranking.ghats)),
@@ -217,7 +228,7 @@ def build_export(generated_on: date | str | None = None) -> dict:
             actions.append({
                 "order": a.order, "site": a.site, "id": "rule-" + "-".join(a.rule_ids).lower(),
                 "ruleIds": list(a.rule_ids), "triggers": list(a.triggers),
-                "trigger": "ALL" if a.triggers == (pl.ALL_GHATS,) else a.triggers[0],
+                "trigger": "ALL" if pl.ALL_GHATS in a.triggers else a.triggers[0],
                 "taskGroup": TASK_GROUP_IDS[a.task_group], "en": a.action_en, "hi": a.action_hi,
                 "hiReviewed": a.hi_reviewed, "window": a.when.replace(" to ", " → "),
                 "start": a.start.isoformat(), "end": a.end.isoformat(),

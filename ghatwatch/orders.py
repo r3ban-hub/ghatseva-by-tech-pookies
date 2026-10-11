@@ -378,7 +378,9 @@ def to_markdown(order: WorkOrder) -> str:
         f"**Water body:** {order.water_body or FILL_BLANK} · **Zone / ward:** {order.zone_ward_display} · "
         f"**Tier {order.tier}, {risk}**",
         "",
-        f"**Issued by:** {order.issued_by} · **Date issued:** {_date(order.issue_date)} · "
+        "**DRAFT for officer review — not an issued order.**",
+        "",
+        f"**Prepared for issue by:** {order.issued_by} (role) · **Draft date:** {_date(order.issue_date)} · "
         f"**Immersion day:** {_date(order.event_date)}",
         "",
         "**Name in the MPPCB reports:**",

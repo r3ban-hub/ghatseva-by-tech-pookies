@@ -2,7 +2,7 @@ import { Info, Languages } from "lucide-react";
 import type { Lang } from "@/lib/data/types";
 import type { Dictionary } from "@/lib/i18n";
 
-/** Permanent notice: placeholder data, historical only, pages unverified. Printed too. */
+/** Permanent notice: backend output from historical data, pages only partly checked. Printed too. */
 export function DataNoticeBanner({ lang, t }: { lang: Lang; t: Dictionary }) {
   return (
     <div role="note" className="border-b border-slate-300 bg-slate-100">

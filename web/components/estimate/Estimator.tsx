@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Eraser, FlaskConical } from "lucide-react";
+import { Eraser } from "lucide-react";
 
 export interface EstimatorLineView {
   id: string;
@@ -10,9 +10,7 @@ export interface EstimatorLineView {
 }
 
 export interface EstimatorLabels {
-  loadIllustrative: string;
   clear: string;
-  illustrativeBanner: string;
   enteredBanner: string;
   col: { item: string; unit: string; quantity: string; low: string; high: string; subtotal: string };
   rateNotSet: string;
@@ -21,7 +19,6 @@ export interface EstimatorLabels {
   unset: string;
   allSet: string;
   partial: string;
-  mockTag: string;
 }
 
 type Entry = { quantity: string; low: string; high: string };
@@ -35,20 +32,17 @@ const num = (s: string): number | null => {
 const inr = (v: number) => v.toLocaleString("en-IN", { maximumFractionDigits: 0 });
 
 /**
- * quantity × rate calculator (PRD v2 §8). Uses only values typed on this page or the
- * explicitly loaded illustrative set. Nothing here feeds the brief or work orders.
+ * quantity × rate calculator (PRD v2 §8). Uses only values typed on this page; no rates are
+ * supplied or invented. Nothing here feeds the brief or work orders.
  */
 export function Estimator({
   lines,
-  illustrative,
   labels,
 }: {
   lines: EstimatorLineView[];
-  illustrative: Record<string, { quantity: number; low: number; high: number }>;
   labels: EstimatorLabels;
 }) {
   const [entries, setEntries] = useState<Record<string, Entry>>(() => Object.fromEntries(lines.map((l) => [l.id, EMPTY])));
-  const [isIllustrative, setIsIllustrative] = useState(false);
 
   const update = (id: string, field: keyof Entry, value: string) => {
     setEntries((prev) => ({ ...prev, [id]: { ...prev[id], [field]: value } }));
@@ -61,8 +55,8 @@ export function Estimator({
     const rows = lines.map((l) => {
       const e = entries[l.id];
       const q = num(e.quantity);
-      const lo = num(e.low);
-      const hi = num(e.high) ?? lo; // a single rate gives a point estimate
+      const lo = num(e.low) ?? num(e.high); // a single rate in either box gives a point estimate
+      const hi = num(e.high) ?? lo;
       const complete = q !== null && lo !== null && hi !== null;
       if (complete) {
         low += q * Math.min(lo, hi);
@@ -83,7 +77,7 @@ export function Estimator({
       placeholder={placeholder}
       onChange={(ev) => update(id, field, ev.target.value)}
       className={`w-24 rounded border px-2 py-1 text-right text-xs tabular-nums ${
-        value === "" ? "hatch border-dashed border-slate-400 bg-white" : isIllustrative ? "border-slate-500 bg-white" : "border-slate-300 bg-white"
+        value === "" ? "hatch border-dashed border-slate-400 bg-white" : "border-slate-300 bg-white"
       }`}
     />
   );
@@ -91,32 +85,10 @@ export function Estimator({
   return (
     <div className="flex flex-col gap-3">
       <div className="no-print flex flex-wrap gap-2">
-        {/* Shown only if a data source supplies illustrative values; the backend source supplies none. */}
-        {Object.keys(illustrative).length > 0 && (
-        <button
-          type="button"
-          onClick={() => {
-            setEntries(
-              Object.fromEntries(
-                lines.map((l) => {
-                  const v = illustrative[l.id];
-                  return [l.id, v ? { quantity: String(v.quantity), low: String(v.low), high: String(v.high) } : EMPTY];
-                }),
-              ),
-            );
-            setIsIllustrative(true);
-          }}
-          className="inline-flex items-center gap-1.5 rounded border border-dashed border-slate-500 bg-white px-2.5 py-1 text-sm text-slate-800 hover:border-navy hover:text-navy"
-        >
-          <FlaskConical aria-hidden className="h-4 w-4" />
-          {labels.loadIllustrative}
-        </button>
-        )}
         <button
           type="button"
           onClick={() => {
             setEntries(Object.fromEntries(lines.map((l) => [l.id, EMPTY])));
-            setIsIllustrative(false);
           }}
           className="inline-flex items-center gap-1.5 rounded border border-slate-300 bg-white px-2.5 py-1 text-sm text-slate-800 hover:border-navy hover:text-navy"
         >
@@ -125,13 +97,8 @@ export function Estimator({
         </button>
       </div>
 
-      <p
-        role="status"
-        className={`rounded border px-3 py-2 text-xs ${
-          isIllustrative ? "hatch border-dashed border-slate-600 bg-white font-semibold text-slate-900" : "border-slate-200 bg-slate-50 text-slate-700"
-        }`}
-      >
-        {isIllustrative ? labels.illustrativeBanner : labels.enteredBanner}
+      <p role="status" className="rounded border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700">
+        {labels.enteredBanner}
       </p>
 
       <div className="overflow-x-auto rounded border border-slate-200">
@@ -151,7 +118,6 @@ export function Estimator({
               <tr key={r.id} className="border-b border-slate-100 last:border-0">
                 <td className="px-2 py-1.5 font-medium text-slate-900">
                   {r.item}
-                  {isIllustrative && <span className="hatch ml-2 rounded-sm border border-dashed border-slate-500 px-1 text-[10px] font-semibold">{labels.mockTag}</span>}
                 </td>
                 <td className="px-2 py-1.5 text-slate-600">{r.unit}</td>
                 <td className="px-2 py-1.5 text-right">{input(r.id, "quantity", r.e.quantity, `${r.item}: ${labels.col.quantity}`, "—")}</td>

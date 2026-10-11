@@ -50,7 +50,13 @@ export default async function OrderPage({ params }: PageProps<"/[lang]/orders/[s
   const whatsapp = [
     `${t.orders.orderTitle}: ${pick(site.name, lang)}`,
     t.orders.draft,
-    ...sorted.map((a) => `• ${pick(a.dates, lang)}: ${t.ghat.actions.groups[a.taskGroup]} — ${t.common.assignBlank}`),
+    ...sorted.map(
+      (a) =>
+        `• ${pick(a.dates, lang)}: ${t.ghat.actions.groups[a.taskGroup]} — ${
+          a.responsible ? `${a.responsible}${a.responsibleIsAssumption ? ` ${t.common.assumedConfirm}` : ""}` : t.common.assignBlank
+        }`,
+    ),
+    ...(sorted.some((a) => !a.verified) ? [t.common.recommendation] : []),
     fill(t.orders.reportBack, { date: pick(meta.reportBackBy, lang) }),
   ].join("\n");
 

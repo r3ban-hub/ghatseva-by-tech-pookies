@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     template: "%s · Visarjan Ghat Watch",
   },
   description:
-    "Screening prototype for Bhopal Municipal Corporation visarjan planning: ghat ranking against CPCB limits from MPPCB reports 2023–2025. Placeholder data.",
+    "Screening tool for Bhopal Municipal Corporation visarjan planning: ghat ranking against CPCB limits from MPPCB reports 2023–2025 (historical readings; recommendations need officer verification).",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

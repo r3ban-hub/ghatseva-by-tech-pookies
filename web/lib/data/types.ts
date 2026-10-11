@@ -1,6 +1,5 @@
-// Data contract used by every screen. Screens only read these shapes through the
-// adapter in `lib/data/index.ts`, so the mock source can later be swapped for the
-// backend export without touching UI code.
+// Data contract used by every screen. Screens only read these shapes through
+// `lib/data/index.ts`, which maps the backend export (lib/data/backend.ts).
 
 export type Lang = "en" | "hi";
 
@@ -11,13 +10,11 @@ export interface Localized {
 
 /**
  * Where a figure comes from. Shown to the user next to the figure.
- * - prd:       stated in visarjan_ghat_watch_prd_v2.md (computed from the track CSV on 11 Oct 2026)
- * - track_csv: transcribed verbatim from the public track CSV
- * - mock:      illustrative example only, not a finding
- * - blank:     intentionally empty (unassigned role, rate not set)
  * - backend:   computed by the Python backend (ghatwatch) and exported to lib/data/generated/backend.json
+ * - prd:       a rule or plan-window description from the team's PRD v2 (text, not data)
+ * - blank:     intentionally empty (unassigned role, rate not set)
  */
-export type Provenance = "backend" | "prd" | "track_csv" | "mock" | "blank";
+export type Provenance = "backend" | "prd" | "blank";
 
 export type ReportYear = 2023 | 2024 | 2025;
 
@@ -120,7 +117,7 @@ export interface CoverageSummary {
 }
 
 export interface Meta {
-  sourceKind: "mock" | "backend";
+  sourceKind: "backend";
   sourceLabel: Localized;
   prdVersion: string;
   analysisDate: string;
@@ -137,7 +134,7 @@ export interface Meta {
   coverage: CoverageSummary;
 }
 
-/** How a transcribed cell should be displayed. Mapped one-to-one from the CSV `flag` column per the data dictionary. */
+/** How a reading is displayed. The backend assigns it from the CSV `flag` column per the data dictionary. */
 export type ValueState = "numeric" | "bdl" | "nd" | "not_sampled" | "unknown_flag" | "invalid_value";
 
 export interface TrackReading {
@@ -159,7 +156,7 @@ export interface TrackReading {
   siteAsPrinted: string;
   siteMatchConfidence: string;
   source: SourceRef | null;
-  provenance: "track_csv" | "backend";
+  provenance: "backend";
   /** Backend Class B result for this reading (pass / fail / unassessable / no_criterion), when supplied. */
   classB?: string;
 }
@@ -186,7 +183,7 @@ export type CellState = ValueState | "no_table";
 
 /**
  * One cell of the expected grid (season × phase × parameter) for a site.
- * Cells with a CSV row carry the transcribed reading; cells without one are `no_table`.
+ * Cells with a CSV row carry the reading; cells without one are `no_table`.
  */
 export interface GridCell {
   key: string;
@@ -212,7 +209,7 @@ export interface SiteEvidence {
   parameters: string[];
   cells: GridCell[];
   printedNames: PrintedName[];
-  /** True while the grid is assembled from the transcription; the backend export will supply it directly. */
+  /** False when the grid comes from the backend export (always, now). */
   assembledFromTranscription: boolean;
 }
 
@@ -239,6 +236,10 @@ export interface RecommendedAction {
   triggers?: string[];
   /** False while the Hindi text is a provisional translation. */
   hiReviewed?: boolean;
+  /** Role from config/ghat_assignments.csv, or null when unassigned. */
+  responsible?: string | null;
+  /** True when that role is a documented assumption to confirm. */
+  responsibleIsAssumption?: boolean;
 }
 
 export interface TargetItem {
@@ -291,13 +292,7 @@ export interface EstimateLine {
   unit: Localized;
 }
 
-/** Explicitly illustrative values, loaded only on request. Never used in briefs or work orders. */
-export interface IllustrativeValues {
-  provenance: "mock";
-  values: Record<string, { quantity: number; low: number; high: number }>;
-}
-
-/** Everything the UI can ask for. Replace the mock implementation with a backend adapter later. */
+/** Everything the UI can ask for; implemented by lib/data/backend.ts. */
 export interface DataSource {
   getMeta(): Promise<Meta>;
   getRanking(): Promise<SiteRanking[]>;
@@ -311,5 +306,4 @@ export interface DataSource {
   getTaskGroups(): Promise<TaskGroupInfo[]>;
   getWorkOrderMeta(): Promise<WorkOrderMeta>;
   getEstimateLines(): Promise<EstimateLine[]>;
-  getIllustrativeValues(): Promise<IllustrativeValues>;
 }
