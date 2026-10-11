@@ -1,0 +1,43 @@
+# Python caches and builds
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Test and tool caches
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Secrets (none are needed; keep it that way)
+.env
+.env.*
+*.key
+*.pem
+secrets.*
+.streamlit/secrets.toml
+
+# Generated outputs written to the repo root (re-create with the commands in README).
+# Anchored with "/" so templates/ (e.g. a future templates/work_order_en.md) is never ignored.
+/out/
+/output/
+/evidence*.csv
+/work_order*.md
+/brief_*.md
+/*.zip
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Note: data/, config/, templates/ and tests/fixtures/ are source files and must stay tracked.

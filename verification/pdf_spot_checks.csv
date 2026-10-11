@@ -1,0 +1,13 @@
+year,festival,site,phase,parameter,value_as_printed,source_page,report_file,method,checked_on,scope
+2023,Ganesh,Bairagarh (Sant Hirdaram) kund,after,Dissolved oxygen,0,26,Idol_immer._Report_23_CPCB.pdf,pdftotext -raw page 26; table 2 of 3 (Khatlapura / Sant Hirdaram / Prempura),2026-10-11,PARTIAL manual spot check
+2023,Ganesh,Bairagarh (Sant Hirdaram) kund,after,BOD,10,26,Idol_immer._Report_23_CPCB.pdf,pdftotext -raw page 26; table 2 of 3,2026-10-11,PARTIAL manual spot check
+2023,Durga,Bairagarh (Sant Hirdaram) kund,pre,Dissolved oxygen,0,60,Idol_immer._Report_23_CPCB.pdf,pdftotext -layout page 60; Sant Hirdaram table,2026-10-11,PARTIAL manual spot check
+2023,Durga,Bairagarh (Sant Hirdaram) kund,during,Dissolved oxygen,0,60,Idol_immer._Report_23_CPCB.pdf,pdftotext -layout page 60; Sant Hirdaram table,2026-10-11,PARTIAL manual spot check
+2025,Ganesh,Bairagarh (Sant Hirdaram) kund,during,Dissolved oxygen,0,28,Ganesh_and_Durga_visarjan_report-2025.pdf,pdftotext -layout page 28; single (during) column,2026-10-11,PARTIAL manual spot check
+2025,Ganesh,Malikhedi kund,during,Dissolved oxygen,0.6,29,Ganesh_and_Durga_visarjan_report-2025.pdf,pdftotext -raw page 29; Maalikhedi table,2026-10-11,PARTIAL manual spot check
+2025,Durga,Rani Kamlapati ghat / Kamla Park kund,pre,Dissolved oxygen,2.5,64,Ganesh_and_Durga_visarjan_report-2025.pdf,pdftotext -raw page 64; Rani kamlapati visarjan ghat (lower lake),2026-10-11,PARTIAL manual spot check
+2025,Durga,Rani Kamlapati ghat / Kamla Park kund,during,Dissolved oxygen,2.4,64,Ganesh_and_Durga_visarjan_report-2025.pdf,pdftotext -raw page 64,2026-10-11,PARTIAL manual spot check
+2025,Durga,Rani Kamlapati ghat / Kamla Park kund,after,Dissolved oxygen,2.6,64,Ganesh_and_Durga_visarjan_report-2025.pdf,pdftotext -raw page 64,2026-10-11,PARTIAL manual spot check
+2025,Durga,Shahpura lake ghat,pre,Dissolved oxygen,2.5,65,Ganesh_and_Durga_visarjan_report-2025.pdf,pdftotext -layout page 65; second table (raw text lists location names out of table order),2026-10-11,PARTIAL manual spot check
+2024,Ganesh,Prempura ghat,during,Dissolved oxygen,3.9,70,Ganesh_and_Durga_visarjan_report-2024.pdf,pdftotext -layout page 70; first table (Prempura Visarjanghat),2026-10-11,PARTIAL manual spot check
+2024,Ganesh,Khatlapura ghat,during,Dissolved oxygen,4,69,Ganesh_and_Durga_visarjan_report-2024.pdf,pdftotext -raw/-layout page 69; first table (Khatlapura Visarjanghat),2026-10-11,PARTIAL manual spot check

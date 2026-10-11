@@ -1,0 +1,5 @@
+# Versions the test suite was run with (Python 3.13.7, Windows 11).
+# Other versions, including Python 3.12 and pandas 2.x, have NOT been tested.
+pandas==3.0.6
+numpy==2.3.0
+pytest==9.1.1

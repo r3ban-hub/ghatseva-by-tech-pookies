@@ -1,0 +1,4 @@
+# Supplied source files must stay byte-identical to the Track 2 pack (they use
+# CRLF line endings). "-text" stops Git converting line endings on commit or
+# checkout, so tests/test_pipeline.py's SHA-256 check passes on every OS.
+data/** -text
