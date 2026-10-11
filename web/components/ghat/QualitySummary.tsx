@@ -61,17 +61,17 @@ export function QualitySummary({ site, counts, t }: Props) {
       subtitle={s.subtitle}
       aside={<ProvenanceTag provenance="backend" label={t.provenance.backend} detail="ranking.py" title={t.provenance.backendLong} />}
     >
-      <div className="grid gap-3 md:grid-cols-3">
+      <div className="grid gap-3 lg:grid-cols-3">
         {cards.map((card) => {
           const c = counts[card.key];
           const mismatch = c.numeric !== card.prdN;
           return (
-            <div key={card.key} className="rounded border border-slate-200 px-3 py-2.5">
+            <div key={card.key} className="flex flex-col rounded border border-slate-200 px-3 py-2.5">
               <h3 className="text-sm font-semibold text-slate-900">{card.title}</h3>
               <p className="text-[11px] text-slate-500">
                 {s.standard}: {card.standard}
               </p>
-              <dl className="mt-2 space-y-1.5 text-xs">
+              <dl className="mt-2 mb-2.5 space-y-1.5 text-xs">
                 {card.rows.map((row) => (
                   <div key={row.label} className="flex items-center justify-between gap-3">
                     <dt className="text-slate-600">{row.label}</dt>
@@ -79,7 +79,7 @@ export function QualitySummary({ site, counts, t }: Props) {
                   </div>
                 ))}
               </dl>
-              <div className="mt-2.5 border-t border-slate-100 pt-2 text-[11px] text-slate-600">
+              <div className="mt-auto border-t border-slate-100 pt-2 text-[11px] text-slate-600">
                 <p className="font-medium text-slate-700">{s.available}</p>
                 <p className="mt-0.5">
                   {fill(s.breakdown, {

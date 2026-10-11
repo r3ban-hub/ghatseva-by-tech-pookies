@@ -76,7 +76,7 @@ export function Estimator({
       aria-label={label}
       placeholder={placeholder}
       onChange={(ev) => update(id, field, ev.target.value)}
-      className={`w-24 rounded border px-2 py-1 text-right text-xs tabular-nums ${
+      className={`w-28 [appearance:textfield] rounded border px-2 py-1 text-right text-xs tabular-nums placeholder:text-slate-500 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
         value === "" ? "hatch border-dashed border-slate-400 bg-white" : "border-slate-300 bg-white"
       }`}
     />
@@ -102,8 +102,8 @@ export function Estimator({
       </p>
 
       <div className="overflow-x-auto rounded border border-slate-200">
-        <table className="w-full min-w-[820px] border-collapse text-xs">
-          <thead className="bg-slate-50 text-left text-slate-600">
+        <table className="w-full min-w-[640px] border-collapse text-xs">
+          <thead className="bg-slate-50 text-left text-slate-600 [&_th]:normal-nums">
             <tr className="border-b border-slate-200">
               <th scope="col" className="px-2 py-2 font-medium">{labels.col.item}</th>
               <th scope="col" className="px-2 py-2 font-medium">{labels.col.unit}</th>
@@ -119,7 +119,7 @@ export function Estimator({
                 <td className="px-2 py-1.5 font-medium text-slate-900">
                   {r.item}
                 </td>
-                <td className="px-2 py-1.5 text-slate-600">{r.unit}</td>
+                <td className="px-2 py-1.5 whitespace-nowrap text-slate-600 normal-nums">{r.unit}</td>
                 <td className="px-2 py-1.5 text-right">{input(r.id, "quantity", r.e.quantity, `${r.item}: ${labels.col.quantity}`, "—")}</td>
                 <td className="px-2 py-1.5 text-right">{input(r.id, "low", r.e.low, `${r.item}: ${labels.col.low}`, labels.rateNotSet)}</td>
                 <td className="px-2 py-1.5 text-right">{input(r.id, "high", r.e.high, `${r.item}: ${labels.col.high}`, labels.rateNotSet)}</td>

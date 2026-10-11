@@ -168,7 +168,7 @@ export default async function GhatPage({ params }: PageProps<"/[lang]/ghats/[sit
 
       <ReasonList site={site} cells={evidence.cells} printedNames={evidence.printedNames} lang={lang} t={t} />
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:items-start">
         <ActionList actions={actions} lang={lang} t={t} />
         <TargetChecklist standard={standard} lang={lang} t={t} />
       </div>
@@ -180,6 +180,7 @@ export default async function GhatPage({ params }: PageProps<"/[lang]/ghats/[sit
         aside={<ProvenanceTag provenance="backend" label={t.provenance.backend} detail="evidence.py" title={t.provenance.backendLong} />}
       >
         <div className="flex flex-col gap-6">
+          <p aria-hidden className="no-print -mb-3 text-[11px] text-slate-500 sm:hidden">{t.ghat.charts.scrollHint}</p>
           {plots.map((p) => (
             <div key={p.parameter}>
               <h3 className="text-sm font-semibold text-slate-900">

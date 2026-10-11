@@ -39,11 +39,10 @@ export default async function PlanPage({ params }: PageProps<"/[lang]/plan">) {
         window: action.window,
         startDay: day(action.start),
         endDay: day(action.end),
-        roleExample: action.responsible
+        role: action.responsible
           ? `${action.responsible}${action.responsibleIsAssumption ? ` ${t.common.assumedConfirm}` : ""}`
-          : info
-            ? pick(info.roleExample, lang)
-            : "",
+          : null,
+        roleExample: info ? pick(info.roleExample, lang) : "",
         outcome: info ? pick(info.outcome, lang) : "",
       });
     }
@@ -68,7 +67,7 @@ export default async function PlanPage({ params }: PageProps<"/[lang]/plan">) {
               className={`rounded border px-3 py-2 text-xs ${w.id === "w4" ? "border-navy bg-navy-soft" : "border-slate-200"}`}
             >
               <p className="font-semibold text-slate-900">
-                {pick(w.dates, lang)} <span className="font-normal text-slate-400">({w.label})</span>
+                {pick(w.dates, lang)} <span className="font-normal text-slate-600">({w.label})</span>
               </p>
               <p className="mt-0.5 text-slate-700">{pick(w.activities, lang)}</p>
             </li>

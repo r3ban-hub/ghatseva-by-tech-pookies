@@ -65,7 +65,7 @@ export function DotPlot({ id, title, description, unitLabel, seasonLabels, phase
           viewBox={`0 0 ${W} ${H}`}
           role="img"
           aria-labelledby={`${id}-title ${id}-desc`}
-          className="h-auto w-full min-w-[560px] text-[10px]"
+          className="h-auto w-full max-w-4xl min-w-[560px] text-[10px]"
         >
           <title id={`${id}-title`}>{title}</title>
           <desc id={`${id}-desc`}>{description}</desc>

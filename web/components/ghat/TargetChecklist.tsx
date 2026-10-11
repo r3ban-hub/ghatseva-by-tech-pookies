@@ -39,7 +39,7 @@ export function TargetChecklist({ standard, lang, t }: { standard: TargetStandar
                   <span className="font-medium text-slate-900">{pick(item.parameter, lang)}</span>{" "}
                   <span className="text-slate-700">{pick(item.target, lang)}</span>
                   {!item.inCurrentData && (
-                    <span className="hatch ml-2 inline-block rounded-sm border border-dashed border-slate-400 bg-white px-1.5 text-[11px] text-slate-700">
+                    <span className="hatch mt-1 block w-fit rounded-sm border border-dashed border-slate-400 bg-white px-1.5 text-[11px] text-slate-700">
                       {g.notInData}
                     </span>
                   )}

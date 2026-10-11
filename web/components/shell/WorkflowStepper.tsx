@@ -34,7 +34,7 @@ export function WorkflowStepper({ lang, steps, label, plannedLabel }: Props) {
           const current = isCurrent(step.match);
           return (
             <li key={step.key} className="flex shrink-0 items-center gap-1">
-              {i > 0 && <ChevronRight aria-hidden className="h-3.5 w-3.5 text-slate-300" />}
+              {i > 0 && <ChevronRight aria-hidden className="h-3.5 w-3.5 text-slate-300 max-sm:hidden" />}
               <Link
                 href={step.href}
                 title={step.title}
@@ -57,8 +57,8 @@ export function WorkflowStepper({ lang, steps, label, plannedLabel }: Props) {
                 >
                   {i + 1}
                 </span>
-                {step.label}
-                {!step.ready && <span className="text-[11px] font-normal text-slate-400">({plannedLabel})</span>}
+                <span className={current ? undefined : "max-sm:sr-only"}>{step.label}</span>
+                {!step.ready && <span className="text-[11px] font-normal text-slate-400 max-sm:hidden">({plannedLabel})</span>}
               </Link>
             </li>
           );

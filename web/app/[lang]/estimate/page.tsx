@@ -26,7 +26,6 @@ export default async function EstimatePage({ params }: PageProps<"/[lang]/estima
       </header>
 
       <Section
-        title={e.title}
         subtitle={e.sourceNote}
         aside={
           <div className="flex flex-wrap gap-1">

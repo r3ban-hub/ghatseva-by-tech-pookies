@@ -244,6 +244,7 @@ export const en = {
       classB: "Class B",
       classD: "Class D line",
       missing: "Missing",
+      scrollHint: "Scroll each chart sideways to see all seasons and the limit labels.",
       phaseKey: "Pre = before immersion · During = during immersion · After = one week after",
       dotTitle: "{season}, {phase}: {value} {unit} ({source})",
       missingTitle: "{season}, {phase}: {state}",
@@ -321,7 +322,7 @@ export const en = {
   },
   plan: {
     title: "Action plan, 11–27 October 2026",
-    intro: "Recommended tasks from the backend plan (action rules, dated for 20 Oct 2026), in rank order. These are recommendations for officer verification; nothing here has been carried out or verified.",
+    intro: "Recommended tasks from the backend plan (action rules, dated for 20 Oct 2026), by start date and then rank. These are recommendations for officer verification; nothing here has been carried out or verified.",
     windows: "Plan windows (PRD v2 §7.3)",
     timeline: "Timeline",
     immersion: "Immersion, 20 Oct",

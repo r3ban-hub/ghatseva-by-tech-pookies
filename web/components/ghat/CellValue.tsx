@@ -29,7 +29,7 @@ export function CellValue({ state, printed, short, title, compact }: Props) {
   const size = compact ? "min-w-[2.5rem] px-1 py-0.5 text-[11px]" : "px-1.5 py-0.5 text-xs";
   const text = state === "numeric" ? printed : state === "bdl" || state === "nd" ? printed || short : short;
   return (
-    <span title={title} className={`inline-flex items-center justify-center rounded-sm tabular-nums ${size} ${STYLES[state]}`}>
+    <span title={title} className={`relative inline-flex items-center justify-center rounded-sm tabular-nums ${size} ${STYLES[state]}`}>
       <span aria-hidden={state !== "numeric"}>{text}</span>
       {state !== "numeric" && <span className="sr-only">{title}</span>}
     </span>

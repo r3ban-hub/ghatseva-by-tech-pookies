@@ -81,7 +81,7 @@ export default async function BriefPage({ params }: PageProps<"/[lang]/brief">) 
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="no-print flex flex-wrap items-center justify-between gap-3">
+      <div className="no-print mx-auto flex w-full max-w-[210mm] flex-wrap items-center justify-between gap-3">
         <Link href={`/${lang === "en" ? "hi" : "en"}/brief/`} className="text-sm text-accent underline-offset-2 hover:underline">
           {b.otherLang}
         </Link>
@@ -91,7 +91,7 @@ export default async function BriefPage({ params }: PageProps<"/[lang]/brief">) 
         </div>
       </div>
 
-      <article className="mx-auto w-full max-w-[210mm] rounded-md border border-slate-300 bg-white px-7 py-6 text-sm text-slate-800 shadow-sm print:max-w-none print:border-0 print:p-0 print:shadow-none">
+      <article className="mx-auto w-full max-w-[210mm] rounded-md border border-slate-300 bg-white px-4 py-5 text-sm text-slate-800 shadow-sm sm:px-7 sm:py-6 print:max-w-none print:border-0 print:p-0 print:shadow-none">
         <h1 className="text-xl font-semibold text-slate-900">{b.title}</h1>
         <p className="mt-1 text-xs text-slate-600">{b.intro}</p>
         {lang === "hi" && <p className="mt-1 text-xs font-semibold text-slate-900">{t.notice.hindi}</p>}
@@ -123,9 +123,13 @@ export default async function BriefPage({ params }: PageProps<"/[lang]/brief">) 
               <tr key={s.siteId} className="print-break-avoid border-b border-slate-200 align-top">
                 <td className="py-1.5 pr-2 font-semibold tabular-nums">{s.rank}</td>
                 <td className="py-1.5 pr-2 font-medium text-slate-900">{pick(s.name, lang)}</td>
-                <td className="py-1.5 pr-2 whitespace-nowrap">
+                <td className="py-1.5 pr-3">
                   <TierBadge tier={s.tier} label={fill(t.tier.label, { n: s.tier })} />
-                  {s.highRisk && <span className="ml-1 text-[10px] font-semibold text-risk-red uppercase">{t.overview.ranking.highRisk}</span>}
+                  {s.highRisk && (
+                    <span className="mt-1 block text-[11px] font-semibold tracking-wide whitespace-nowrap text-risk-red uppercase">
+                      {t.overview.ranking.highRisk}
+                    </span>
+                  )}
                 </td>
                 <td className="py-1.5">{siteReasons(s, t)[0]}</td>
               </tr>
@@ -135,21 +139,23 @@ export default async function BriefPage({ params }: PageProps<"/[lang]/brief">) 
 
         <h2 className={h2}>{b.actions}</h2>
         <p className="mt-1 text-xs text-slate-600">{b.actionsBody}</p>
-        <ul className="mt-1 space-y-1.5">
+        <ul className="mt-1.5 space-y-2">
           {actions.map(({ action, ghats }) => (
-            <li key={action.id} className="print-break-avoid text-xs">
+            <li key={action.id} className="print-break-avoid">
               <span className="font-semibold text-slate-900">
                 {pick(action.dates, lang)} · {t.ghat.actions.groups[action.taskGroup]}:
               </span>{" "}
-              {pick(action.text, lang)}{" "}
-              <span className="text-slate-600">— {ghats.length === sites.length ? t.common.allGhats : ghats.join(", ")}</span>{" "}
-              <span className="text-slate-500 italic">({t.common.recommendation})</span>
+              {pick(action.text, lang)}
+              <span className="mt-0.5 block text-xs text-slate-600">
+                {ghats.length === sites.length ? t.common.allGhats : ghats.join(", ")}{" "}
+                <span className="text-slate-500 italic">({t.common.recommendation})</span>
+              </span>
             </li>
           ))}
         </ul>
 
         <h2 className={h2}>{b.target}</h2>
-        <ul className="mt-1 space-y-0.5 text-xs">
+        <ul className="mt-1 space-y-0.5">
           {standard.items.map((i) => (
             <li key={i.id}>
               ☐ <span className="font-medium">{pick(i.parameter, lang)}</span>: {pick(i.target, lang)}
@@ -160,10 +166,10 @@ export default async function BriefPage({ params }: PageProps<"/[lang]/brief">) 
         <p className="mt-1 text-xs text-slate-700">{pick(standard.interimNote, lang)}</p>
 
         <h2 className={h2}>{b.resources}</h2>
-        <p className="mt-1 text-xs">{b.resourcesBody}</p>
+        <p className="mt-1">{b.resourcesBody}</p>
 
         <h2 className={h2}>{b.gaps}</h2>
-        <ul className="mt-1 list-disc space-y-0.5 pl-5 text-xs">
+        <ul className="mt-1 list-disc space-y-0.5 pl-5">
           {limits.map((l) => (
             <li key={l}>{l}</li>
           ))}

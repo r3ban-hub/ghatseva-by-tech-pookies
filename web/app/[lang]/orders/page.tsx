@@ -32,13 +32,13 @@ export default async function OrdersPage({ params }: PageProps<"/[lang]/orders">
       <p className="hatch rounded border border-dashed border-slate-500 bg-white px-3 py-2 text-xs font-semibold text-slate-900">{o.draft}</p>
 
       <Section
-        title={o.title}
+        title={t.common.allGhats}
         aside={<ProvenanceTag provenance="backend" label={t.provenance.backend} detail="orders.py" title={t.provenance.backendLong} />}
       >
         <ul className="divide-y divide-slate-100">
           {sites.map((s, i) => (
-            <li key={s.siteId} className="flex flex-wrap items-center gap-x-4 gap-y-2 py-2.5">
-              <span className="w-6 text-right text-base font-semibold text-slate-900 tabular-nums">{s.rank}</span>
+            <li key={s.siteId} className="flex flex-wrap items-start gap-x-4 gap-y-2 py-3 sm:flex-nowrap">
+              <span className="w-6 shrink-0 text-right text-base font-semibold text-slate-900 tabular-nums">{s.rank}</span>
               <div className="min-w-0 flex-1">
                 <p className="font-medium text-slate-900">{pick(s.name, lang)}</p>
                 <p className="text-xs text-slate-500">
@@ -50,18 +50,20 @@ export default async function OrdersPage({ params }: PageProps<"/[lang]/orders">
                   ))}
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <TierBadge tier={s.tier} label={fill(t.tier.label, { n: s.tier })} title={t.tier[s.tier]} />
-                {s.highRisk && <span className="text-[11px] font-semibold tracking-wide text-risk-red uppercase">{t.overview.ranking.highRisk}</span>}
+              <div className="flex w-full items-center justify-between gap-4 pl-10 sm:w-auto sm:shrink-0 sm:self-center sm:pl-0">
+                <div className="flex items-center gap-2 sm:w-36">
+                  <TierBadge tier={s.tier} label={fill(t.tier.label, { n: s.tier })} title={t.tier[s.tier]} />
+                  {s.highRisk && <span className="text-[11px] font-semibold tracking-wide whitespace-nowrap text-risk-red uppercase">{t.overview.ranking.highRisk}</span>}
+                </div>
+                <Link
+                  href={`/${lang}/orders/${s.siteId}/`}
+                  className="inline-flex shrink-0 items-center gap-1 rounded border border-slate-300 bg-white px-2.5 py-1 text-sm text-slate-800 hover:border-navy hover:text-navy"
+                >
+                  <FileText aria-hidden className="h-4 w-4" />
+                  {o.open}
+                  <ChevronRight aria-hidden className="h-4 w-4" />
+                </Link>
               </div>
-              <Link
-                href={`/${lang}/orders/${s.siteId}/`}
-                className="inline-flex items-center gap-1 rounded border border-slate-300 bg-white px-2.5 py-1 text-sm text-slate-800 hover:border-navy hover:text-navy"
-              >
-                <FileText aria-hidden className="h-4 w-4" />
-                {o.open}
-                <ChevronRight aria-hidden className="h-4 w-4" />
-              </Link>
             </li>
           ))}
         </ul>

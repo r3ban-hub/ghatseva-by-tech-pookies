@@ -21,8 +21,8 @@ export function cellTitle(cell: GridCell, t: Dictionary): string {
 export function ReadingMiniTable({ cells, t, showParameter }: { cells: GridCell[]; t: Dictionary; showParameter?: boolean }) {
   const e = t.ghat.evidence.col;
   return (
-    <div className="overflow-x-auto">
-      <table className="mt-2 w-full min-w-[420px] text-xs">
+    <div className="relative overflow-x-auto">
+      <table className="mt-2 w-auto min-w-[420px] text-xs">
         <thead className="text-left text-slate-500">
           <tr className="border-b border-slate-200">
             <th scope="col" className="py-1 pr-3 font-medium">{e.season}</th>

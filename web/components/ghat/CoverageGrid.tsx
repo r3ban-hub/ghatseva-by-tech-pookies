@@ -35,7 +35,7 @@ export function CoverageGrid({ evidence, t }: { evidence: SiteEvidence; t: Dicti
         ))}
       </div>
 
-      <div className="overflow-x-auto rounded border border-slate-200">
+      <div className="relative overflow-x-auto rounded border border-slate-200">
         <table className="w-full min-w-[980px] border-collapse text-xs">
           <thead className="bg-slate-50 text-slate-600">
             <tr>

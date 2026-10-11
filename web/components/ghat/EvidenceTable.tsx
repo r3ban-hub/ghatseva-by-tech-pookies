@@ -183,7 +183,7 @@ export function EvidenceTable({ rows, labels }: { rows: EvidenceRowView[]; label
         </p>
       </fieldset>
 
-      <div className="max-h-[36rem] overflow-auto rounded border border-slate-200 print:max-h-none">
+      <div className="relative max-h-[36rem] overflow-auto rounded border border-slate-200 print:max-h-none">
         <table className="w-full min-w-[1080px] border-collapse text-xs">
           <thead className="sticky top-0 z-10 bg-slate-50 text-slate-600 shadow-[0_1px_0_0_#e2e8f0]">
             <tr>
@@ -239,7 +239,7 @@ export function EvidenceTable({ rows, labels }: { rows: EvidenceRowView[]; label
                   </td>
                   <td className="px-2 py-1.5">
                     {r.source && r.sourceText && r.sourceStatus ? (
-                      <SourceRefLink source={r.source} text={r.sourceText} statusText={r.sourceStatus} />
+                      <SourceRefLink source={r.source} text={r.sourceText} statusText={r.sourceStatus} stacked />
                     ) : (
                       <span className="text-slate-400">{labels.noPage}</span>
                     )}

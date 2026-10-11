@@ -62,7 +62,7 @@ export default async function OrderPage({ params }: PageProps<"/[lang]/orders/[s
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="no-print flex flex-wrap items-center justify-between gap-3">
+      <div className="no-print mx-auto flex w-full max-w-[210mm] flex-wrap items-center justify-between gap-3">
         <Link href={`/${lang}/orders/`} className="inline-flex items-center gap-1 text-sm text-slate-600 hover:text-navy hover:underline">
           <ChevronLeft aria-hidden className="h-4 w-4" />
           {t.orders.title}

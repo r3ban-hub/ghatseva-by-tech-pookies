@@ -30,6 +30,9 @@ export function ActionList({ actions, lang, t }: { actions: RecommendedAction[];
                   <FlagChip key={f} severity={FLAG_SEVERITY[f]} label={t.flag[f].short} title={t.flag[f].long} identity={f === "SITE_IDENTITY"} />
                 ))
               )}
+              {!action.verified && (
+                <span className="rounded-sm border border-dashed border-slate-400 px-1.5 py-px text-[11px] text-slate-700 sm:ml-auto">{a.verify}</span>
+              )}
             </div>
             <p className="mt-1 text-sm text-slate-800">{pick(action.text, lang)}</p>
             <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
@@ -38,9 +41,6 @@ export function ActionList({ actions, lang, t }: { actions: RecommendedAction[];
                 {a.when}: {pick(action.dates, lang)}
                 <span className="font-normal text-slate-400">({action.window})</span>
               </span>
-              {!action.verified && (
-                <span className="rounded-sm border border-dashed border-slate-400 px-1.5 py-px text-[11px] text-slate-700">{a.verify}</span>
-              )}
               <span className="text-[11px] text-slate-500 italic">{pick(action.sourceStatus, lang)}</span>
             </div>
           </li>

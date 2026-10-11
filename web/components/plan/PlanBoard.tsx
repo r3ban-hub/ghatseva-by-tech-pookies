@@ -16,6 +16,8 @@ export interface PlanRowView {
   window: string;
   startDay: number;
   endDay: number;
+  /** Assigned role from the backend (e.g. the assumed sampling role), or null when unassigned. */
+  role: string | null;
   roleExample: string;
   outcome: string;
 }
@@ -35,6 +37,8 @@ export interface PlanLabels {
 
 const DAYS = Array.from({ length: 17 }, (_, i) => 11 + i); // 11–27 Oct
 const IMMERSION = 20;
+// Narrower label column and a minimum day width on phones; the label column wraps to two lines.
+const ROW_GRID = "grid grid-cols-[10rem_repeat(17,minmax(1.6rem,1fr))] sm:grid-cols-[16rem_repeat(17,minmax(0,1fr))]";
 
 /** Filterable timeline + task table. Rows (tasks, dates, roles) are supplied; the board only filters them. */
 export function PlanBoard({
@@ -80,9 +84,9 @@ export function PlanBoard({
       </div>
 
       {/* Timeline */}
-      <div className="overflow-x-auto rounded border border-slate-200">
-        <div className="min-w-[900px]">
-          <div className="grid grid-cols-[16rem_repeat(17,minmax(0,1fr))] border-b border-slate-200 bg-slate-50 text-[10.5px] text-slate-600">
+      <div className="overflow-x-auto rounded border border-slate-200 print:overflow-visible [print-color-adjust:exact]">
+        <div className="min-w-[38rem] sm:min-w-[900px] print:min-w-0">
+          <div className={`${ROW_GRID} border-b border-slate-200 bg-slate-50 text-[10.5px] text-slate-600`}>
             <div className="px-2 py-1.5 font-medium">{labels.col.task}</div>
             {DAYS.map((d) => (
               <div
@@ -94,22 +98,23 @@ export function PlanBoard({
               </div>
             ))}
           </div>
-          {visible.length === 0 && <p className="px-3 py-6 text-center text-sm text-slate-500">{labels.empty}</p>}
           {visible.map((r) => (
-            <div key={r.key} className="grid grid-cols-[16rem_repeat(17,minmax(0,1fr))] items-center border-b border-slate-100 text-xs last:border-0">
-              <div className="truncate px-2 py-1.5" title={`${r.siteName} · ${r.groupText}`}>
-                <span className="font-semibold text-slate-500 tabular-nums">#{r.rank}</span>{" "}
-                <span className="text-slate-900">{r.siteName}</span>
-                <span className="text-slate-500"> · {r.groupText}</span>
+            <div key={r.key} className={`${ROW_GRID} border-b border-slate-100 text-xs last:border-0`}>
+              <div className="min-w-0 px-2 py-1 leading-tight" title={`${r.siteName} · ${r.groupText}`}>
+                <div className="truncate">
+                  <span className="font-semibold text-slate-500 tabular-nums">#{r.rank}</span>{" "}
+                  <span className="text-slate-900">{r.siteName}</span>
+                </div>
+                <div className="truncate text-slate-500">{r.groupText}</div>
               </div>
               {DAYS.map((d) => {
                 const active = d >= r.startDay && d <= r.endDay;
                 return (
-                  <div key={d} className={`h-6 ${d === IMMERSION ? "bg-navy-soft" : ""}`}>
+                  <div key={d} className={`flex items-center ${d === IMMERSION ? "bg-navy-soft" : ""}`}>
                     {active && (
                       <div
                         title={`${r.task} (${r.dates})`}
-                        className={`h-full ${d === r.startDay ? "ml-0.5 rounded-l-sm" : ""} ${d === r.endDay ? "mr-0.5 rounded-r-sm" : ""} border-y border-accent bg-accent/80`}
+                        className={`h-4 w-full ${d === r.startDay ? "ml-0.5 rounded-l-sm" : ""} ${d === r.endDay ? "mr-0.5 rounded-r-sm" : ""} border-y border-accent bg-accent/80`}
                       />
                     )}
                   </div>
@@ -118,11 +123,13 @@ export function PlanBoard({
             </div>
           ))}
         </div>
+        {visible.length === 0 && <p className="px-3 py-6 text-center text-sm text-slate-500">{labels.empty}</p>}
       </div>
 
       {/* Task table */}
-      <div className="overflow-x-auto rounded border border-slate-200">
-        <table className="w-full min-w-[980px] border-collapse text-xs">
+      {visible.length > 0 && (
+      <div className="overflow-x-auto rounded border border-slate-200 print:overflow-visible">
+        <table className="w-full min-w-[980px] border-collapse text-xs print:min-w-0">
           <thead className="bg-slate-50 text-left text-slate-600">
             <tr className="border-b border-slate-200">
               {[labels.col.ghat, labels.col.task, labels.col.when, labels.col.role, labels.col.outcome, labels.col.status].map((h) => (
@@ -135,7 +142,7 @@ export function PlanBoard({
           <tbody>
             {visible.map((r) => (
               <tr key={r.key} className="border-b border-slate-100 align-top last:border-0">
-                <td className="px-2 py-2 whitespace-nowrap">
+                <td className="min-w-[9rem] px-2 py-2">
                   <span className="font-semibold text-slate-500 tabular-nums">#{r.rank}</span>{" "}
                   <Link href={r.href} className="font-medium text-slate-900 hover:text-navy hover:underline">
                     {r.siteName}
@@ -147,15 +154,21 @@ export function PlanBoard({
                 </td>
                 <td className="px-2 py-2 whitespace-nowrap">
                   <span className="font-medium text-slate-900">{r.dates}</span>
-                  <span className="block text-[11px] text-slate-400">{r.window}</span>
+                  <span className="block text-[11px] text-slate-500">{r.window}</span>
                 </td>
                 <td className="px-2 py-2">
-                  <span className="font-medium text-slate-900">{labels.assignBlank}</span>
-                  <span className="block text-[11px] text-slate-500">{r.roleExample}</span>
+                  {r.role ? (
+                    <span className="font-medium text-slate-900">{r.role}</span>
+                  ) : (
+                    <>
+                      <span className="font-medium text-slate-900">{labels.assignBlank}</span>
+                      <span className="block text-[11px] text-slate-500">{r.roleExample}</span>
+                    </>
+                  )}
                 </td>
                 <td className="px-2 py-2 text-slate-700">{r.outcome}</td>
                 <td className="px-2 py-2">
-                  <span className="rounded-sm border border-dashed border-slate-400 px-1.5 py-px text-[11px] whitespace-nowrap text-slate-700">
+                  <span className="inline-block min-w-[9rem] rounded-sm border border-dashed border-slate-400 px-1.5 py-px text-[11px] text-slate-700">
                     {labels.recommendation}
                   </span>
                 </td>
@@ -164,6 +177,7 @@ export function PlanBoard({
           </tbody>
         </table>
       </div>
+      )}
     </div>
   );
 }
